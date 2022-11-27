@@ -32,3 +32,7 @@ def parse_file(path):
     content = [line.replace(' ', '') for line in content [-2:]]
 
     return content
+
+
+def csub(a, b):
+    return (a != b) * (3 * (a in ('A', 'T') and b in ('A', 'T') or a in ('G', 'C') and b in ('G', 'C')) or 4)
