@@ -11,8 +11,13 @@ def align_lettre_mot(x, y):
     xbar, ybar = '', ''
     place = False
 
+    # Checking if x is in y first
     for j in range(len(y)):
-        if (x == y[j] or utils.csub(x, y[j]) < CINS + CDEL) and not place:
+        if x == y[j]:
+            return mot_gaps(j) + x + mot_gaps(len(y) - j - 1), y
+
+    for j in range(len(y)):
+        if utils.csub(x, y[j]) < CINS + CDEL and not place:
             xbar += x
             place = True
 
