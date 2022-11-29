@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
         print(f"    SOL_2: {t5 - t4:.5f} seconds.\n")
         
-        benchmarks.append(f"{max(len(x), len(y))} {t3 - t2} {t3 - t1} {t5 - t4}")
+        benchmarks.append(f"{(len(x))} {t3 - t2} {t3 - t1} {t5 - t4}")
 
         i += 1
 
