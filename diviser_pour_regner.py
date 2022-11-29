@@ -30,23 +30,23 @@ def align_lettre_mot(x, y):
 
 def SOL_2(x, y):
     if x == '':
-        return '-' * len(y)
+        return mot_gaps(len(y)), y
 
     elif y == '':
-        return '-' * len(x)
+        return x, mot_gaps(len(x))
 
     elif len(x) == 1:
         return align_lettre_mot(x, y)
 
     elif len(y) == 1:
-        return align_lettre_mot(y, x)
+        return align_lettre_mot(y, x)[::-1]
 
     else:
         i = len(x) // 2
         j = coupure(x, y)
 
-        x1, y1 = SOL_2(x[:i+1], y[:j+1])
-        x2, y2 = SOL_2(x[i+1:], y[j+1:])
+        x1, y1 = SOL_2(x[:i], y[:j])
+        x2, y2 = SOL_2(x[i:], y[j:])
 
         return (x1 + x2, y1 + y2)
 
