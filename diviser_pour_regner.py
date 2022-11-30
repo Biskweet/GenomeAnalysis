@@ -1,6 +1,6 @@
 from utils import utils
 from utils.constants import CINS, CDEL
-import dynamique
+import dynamique_ameliore as dynam
 
 
 def mot_gaps(k):
@@ -11,7 +11,7 @@ def align_lettre_mot(x, y):
     xbar, ybar = '', ''
     place = False
 
-    # Checking if x is in y first
+    # Checking first if x is in y
     for j in range(len(y)):
         if x == y[j]:
             return mot_gaps(j) + x + mot_gaps(len(y) - j - 1), y
@@ -56,29 +56,43 @@ def SOL_2(x, y):
         return (x1 + x2, y1 + y2)
 
 
-def coupure(x, y):
+def coupure(x,y):
     i = len(x) // 2
-    k = i
-
-    tab = dynamique.DIST_1(x, y)
     
-    t2 = [list(range(len(y) + 1))] + [[0 for _ in range(len(y) + 1)] for _ in range(len(x) - i)]
+    tab = [dynam.DIST_2(x[:i + (i == 0)],y)[0], [0 for _ in range(len(y) + 1)]]
+    t2 = [[0 for _ in range(len(y) + 1)] for _ in range(2)]
 
-    i += 1
     while i <= len(x):
         for j in range(len(y) + 1):
             if j == 0:
-                t2[i - k][j] = t2[i - k - 1][j]
+                tab[1][j] = i * CDEL
+                continue
 
-            elif (tab[i][j - 1] <= tab[i - 1][j]) and (tab[i][j - 1] <= tab[i - 1][j - 1]):
-                t2[i - k][j] = t2[i - k][j - 1]
+            insertion = tab[1][j-1] + CINS
+            suppression = tab[0][j] + CDEL
+            substitution = tab[0][j-1] + utils.csub(x[i-1], y[j-1])
 
-            elif (tab[i - 1][j] <= tab[i][j - 1]) and (tab[i - 1][j] <= tab[i - 1][j - 1]):
-                t2[i - k][j] = t2[i - k - 1][j]
+            if i == len(x) // 2:
+                t2[1][j] = j
+
+            elif insertion <= suppression and insertion <= substitution:
+                t2[1][j] = t2[1][j - 1]
+
+            elif suppression <= insertion and suppression <= substitution:
+                t2[1][j] = t2[0][j]
 
             else:
-                t2[i - k][j] = t2[i - k - 1][j - 1]
+                t2[1][j] = t2[0][j - 1]
+
+            # Travail de DIST_2
+            tab[1][j] = min(
+                insertion,
+                suppression,
+                substitution
+            )
 
         i += 1
+        tab = tab[1], tab[0]
+        t2 = t2[1], t2[1]
 
     return t2[-1][-1]

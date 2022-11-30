@@ -1,8 +1,8 @@
 import os
 
-
 # Custom imports
 from . import constants
+
 
 def get_file_name():
     filename = input("Nom du fichier à analyser : ")
